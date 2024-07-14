@@ -1,0 +1,50 @@
+'use strict';
+
+import { WriteStream, createWriteStream } from "fs";
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString: string = '';
+let inputLines: string[] = [];
+let currentLine: number = 0;
+
+process.stdin.on('data', function(inputStdin: string): void {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function(): void {
+    inputLines = inputString.split('\n');
+    inputString = '';
+
+    main();
+});
+
+function readLine(): string {
+    return inputLines[currentLine++];
+}
+
+
+function solucao(simbolo1: string, simbolo2: string, simbolo3: string): string {
+
+    if (simbolo1 === simbolo2 && simbolo2 === simbolo3) {
+        return "GANHOU";
+    } else {
+        return "PERDEU";
+    }
+}
+
+function main() {
+    const ws: WriteStream = createWriteStream(process.env['OUTPUT_PATH']);
+
+    const x1: string = readLine();
+
+    const x2: string = readLine();
+
+    const x3: string = readLine();
+
+    const resultado: string = solucao(x1, x2, x3);
+
+    ws.write(resultado + '\n');
+
+    ws.end();
+}
