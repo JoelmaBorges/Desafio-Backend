@@ -1,0 +1,52 @@
+'use strict';
+
+import { WriteStream, createWriteStream } from "fs";
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString: string = '';
+let inputLines: string[] = [];
+let currentLine: number = 0;
+
+process.stdin.on('data', function(inputStdin: string): void {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function(): void {
+    inputLines = inputString.split('\n');
+    inputString = '';
+
+    main();
+});
+
+function readLine(): string {
+    return inputLines[currentLine++];
+}
+
+function solucao(quantidadeLados: number): string {
+    if (quantidadeLados === 3) {
+        return "TRIANGULO";
+    } else if (quantidadeLados === 4) {
+        return "QUADRILATERO";
+    } else if (quantidadeLados === 5) {
+        return "PENTAGONO";
+    } else if (quantidadeLados === 6) {
+        return "HEXAGONO";
+    } else if (quantidadeLados === 7) {
+        return "HEPTAGONO";
+    } else {
+        return "Figura nao identificada";
+    }
+}
+
+function main() {
+    const ws: WriteStream = createWriteStream(process.env['OUTPUT_PATH']);
+
+    const x1: number = parseInt(readLine().trim(), 10);
+
+    const resultado: string = solucao(x1);
+
+    ws.write(resultado + '\n');
+
+    ws.end();
+}
