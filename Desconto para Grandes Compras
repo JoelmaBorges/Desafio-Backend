@@ -1,0 +1,55 @@
+'use strict';
+
+import { WriteStream, createWriteStream } from "fs";
+import * as process from "process";
+
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString: string = '';
+let inputLines: string[] = [];
+let currentLine: number = 0;
+
+process.stdin.on('data', function(inputStdin: string): void {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function(): void {
+    inputLines = inputString.split('\n');
+    inputString = '';
+
+    main();
+});
+
+function readLine(): string {
+    return inputLines[currentLine++];
+}
+
+function solucao(precosCarrinho: number[], minimoParaDesconto: number, desconto: number): number {
+    const valorTotal = precosCarrinho.reduce((total, preco) => total + preco, 0);
+
+    if (valorTotal >= minimoParaDesconto) {
+        const valorComDesconto = valorTotal - (valorTotal * desconto);
+        return valorComDesconto;
+    } else {
+        return valorTotal;
+    }
+}
+
+function main() {
+    const ws: WriteStream = createWriteStream(process.env['OUTPUT_PATH']!);
+
+    const x1Count: number = parseInt(readLine().trim(), 10);
+
+    const x1: number[] = readLine().replace(/\s+$/g, '').split(' ').map(x1Temp => parseFloat(x1Temp));
+
+    const x2: number = parseFloat(readLine().trim());
+
+    const x3: number = parseFloat(readLine().trim());
+
+    const resultado: number = solucao(x1, x2, x3);
+
+    ws.write(resultado + '\n');
+
+    ws.end();
+}
