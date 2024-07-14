@@ -1,0 +1,42 @@
+'use strict';
+
+import { WriteStream, createWriteStream } from "fs";
+process.stdin.resume();
+process.stdin.setEncoding('utf-8');
+
+let inputString: string = '';
+let inputLines: string[] = [];
+let currentLine: number = 0;
+
+process.stdin.on('data', function(inputStdin: string): void {
+    inputString += inputStdin;
+});
+
+process.stdin.on('end', function(): void {
+    inputLines = inputString.split('\n');
+    inputString = '';
+
+    main();
+});
+
+function readLine(): string {
+    return inputLines[currentLine++];
+}
+
+function solucao(tempoTemporizador: number): number {
+    const tempoTotal = 10; // Tempo total para a cerveja gelar, em minutos
+    const tempoRestante = tempoTotal - tempoTemporizador;
+    return tempoRestante;
+}
+
+function main() {
+    const ws: WriteStream = createWriteStream(process.env['OUTPUT_PATH']);
+
+    const x1: number = parseInt(readLine().trim(), 10);
+
+    const resultado: number = solucao(x1);
+
+    ws.write(resultado + '\n');
+
+    ws.end();
+}
